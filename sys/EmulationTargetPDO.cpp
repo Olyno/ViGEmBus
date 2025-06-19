@@ -738,10 +738,10 @@ VOID ViGEm::Bus::Core::EmulationTargetPDO::DumpAsHex(PCSTR Prefix, PVOID Buffer,
 
 		RtlZeroMemory(dumpBuffer, dumpBufferLength);
 
-		for (ULONG i = 0; i < BufferLength; i++)
-		{
-			sprintf(&dumpBuffer[i * 2], "%02X", static_cast<PUCHAR>(Buffer)[i]);
-		}
+                for (ULONG i = 0; i < BufferLength; i++)
+                {
+                        sprintf_s(&dumpBuffer[i * 2], 3, "%02X", static_cast<PUCHAR>(Buffer)[i]);
+                }
 
 		TraceVerbose(TRACE_BUSPDO,
 			"%s - Buffer length: %04d, buffer content: %s\n",
