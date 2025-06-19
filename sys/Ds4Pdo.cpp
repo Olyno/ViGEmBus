@@ -1216,23 +1216,20 @@ NTSTATUS ViGEm::Bus::Targets::EmulationTargetDS4::SubmitReportImpl(PVOID NewRepo
 
 VOID ViGEm::Bus::Targets::EmulationTargetDS4::ReverseByteArray(PUCHAR Array, INT Length)
 {
-	const auto s = static_cast<PUCHAR>(ExAllocatePoolZero(
-		NonPagedPoolNx,
-		sizeof(UCHAR) * Length,
-		'U4SD'
-	));
-	INT c, d;
+        if (Array == nullptr || Length <= 1)
+                return;
 
-	if (s == nullptr)
-		return;
+        INT start = 0;
+        INT end = Length - 1;
 
-	for (c = Length - 1, d = 0; c >= 0; c--, d++)
-		*(s + d) = *(Array + c);
-
-	for (c = 0; c < Length; c++)
-		*(Array + c) = *(s + c);
-
-	ExFreePoolWithTag(s, 'U4SD');
+        while (start < end)
+        {
+                const UCHAR tmp = Array[start];
+                Array[start] = Array[end];
+                Array[end] = tmp;
+                start++;
+                end--;
+        }
 }
 
 VOID ViGEm::Bus::Targets::EmulationTargetDS4::GenerateRandomMacAddress(PMAC_ADDRESS Address)

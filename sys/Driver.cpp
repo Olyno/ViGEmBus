@@ -606,15 +606,20 @@ void Util_DumpAsHex(PCSTR Prefix, PVOID Buffer, ULONG BufferLength)
 		dumpBufferLength,
 		'1234'
 	));
-	if (dumpBuffer)
-	{
+        if (dumpBuffer)
+        {
 
-		RtlZeroMemory(dumpBuffer, dumpBufferLength);
+                RtlZeroMemory(dumpBuffer, dumpBufferLength);
 
-		for (ULONG i = 0; i < BufferLength; i++)
-		{
-			sprintf(&dumpBuffer[i * 2], "%02X", static_cast<PUCHAR>(Buffer)[i]);
-		}
+                static const CHAR hex[] = "0123456789ABCDEF";
+
+                for (ULONG i = 0; i < BufferLength; i++)
+                {
+                        const UCHAR byte = static_cast<PUCHAR>(Buffer)[i];
+                        dumpBuffer[i * 2] = hex[byte >> 4];
+                        dumpBuffer[i * 2 + 1] = hex[byte & 0xF];
+                }
+                dumpBuffer[BufferLength * 2] = '\0';
 
 		TraceVerbose(TRACE_BUSPDO,
 			"%s - Buffer length: %04d, buffer content: %s\n",
